@@ -33,3 +33,10 @@
 
 # Hidden Visual Studio files
 */.vs/*
+
+# Debug files
+*.idb
+*.ilk
+*.log
+*.pdb
+*.tlog
