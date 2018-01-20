@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+
+# Hidden Visual Studio files
+*/.vs/*
