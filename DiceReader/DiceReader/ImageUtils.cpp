@@ -6,6 +6,37 @@
 
 using namespace cv;
 
+Mat CreateBlurredImage(
+    const Mat& image, 
+    const int kernelRadius,
+    const ImageBlurType blurType)
+{
+    const int kernelDiameter = 2*kernelRadius + 1;  // Required to be odd.
+    const Size kernelSize(kernelRadius, kernelRadius);
+
+    Mat blurredImage;
+    switch (blurType)
+    {
+    case ImageBlurType::NormalizedBox:
+        blur(image, blurredImage, kernelSize);
+        break;
+    case ImageBlurType::Gaussian:
+        GaussianBlur(image, blurredImage, kernelSize, 0, 0);
+        break;
+    case ImageBlurType::Median:
+        medianBlur(image, blurredImage, kernelDiameter);
+        break;
+    case ImageBlurType::Bilateral:
+        bilateralFilter(image, blurredImage, kernelDiameter, kernelDiameter, kernelDiameter);
+        break;
+    default:
+        throw(std::invalid_argument("Unknown blurType in CreateBlurredImage()."));
+        break;
+    }
+
+    return blurredImage;
+}
+
 Mat CreateHistogramOfImage(const Mat& image)
 {
     // Adapted from https://docs.opencv.org/2.4/doc/tutorials/imgproc/histograms/histogram_calculation/histogram_calculation.html.
