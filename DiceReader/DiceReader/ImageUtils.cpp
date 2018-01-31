@@ -6,6 +6,7 @@
 
 using namespace cv;
 
+/////////////////////////////////////////////////
 Mat CreateBlurredImage(
     const Mat& image, 
     const int kernelRadius,
@@ -37,6 +38,32 @@ Mat CreateBlurredImage(
     return blurredImage;
 }
 
+/////////////////////////////////////////////////
+cv::Mat CreateEdgeImage(
+    const cv::Mat& image)
+{
+    // Define kernel.
+    const int kernelRadius = 1;
+    const int kernelDiameter = 2 * kernelRadius + 1;  // Required to be odd.
+    Mat kernelX(kernelDiameter, kernelDiameter, CV_32F);
+    Mat kernelY(kernelDiameter, kernelDiameter, CV_32F);
+
+    // Populate kernel.
+    const int nthDerivative = 1;
+    getDerivKernels(kernelX, kernelY, nthDerivative, nthDerivative, kernelDiameter);
+            
+    // Convolve.
+    Point anchor(-1, -1);
+    double delta = 0;
+    int depth = -1; 
+    Mat gradientX, gradientY;
+    filter2D(image, gradientX, depth, kernelX, anchor, delta, BORDER_DEFAULT);
+    filter2D(image, gradientY, depth, kernelY, anchor, delta, BORDER_DEFAULT);
+
+    return gradientX;
+}
+
+/////////////////////////////////////////////////
 Mat CreateHistogramOfImage(const Mat& image)
 {
     // Adapted from https://docs.opencv.org/2.4/doc/tutorials/imgproc/histograms/histogram_calculation/histogram_calculation.html.

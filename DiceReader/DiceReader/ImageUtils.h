@@ -9,9 +9,13 @@ enum class ImageBlurType {
     Bilateral
 };
 
+
 cv::Mat CreateBlurredImage(
     const cv::Mat& image,
     const int kernelRadius,
     const ImageBlurType blurType);
+
+cv::Mat CreateEdgeImage(
+    const cv::Mat& image);
 
 cv::Mat CreateHistogramOfImage(const cv::Mat& image);
