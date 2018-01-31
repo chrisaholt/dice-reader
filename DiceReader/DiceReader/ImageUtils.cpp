@@ -13,7 +13,7 @@ Mat CreateBlurredImage(
     const ImageBlurType blurType)
 {
     const int kernelDiameter = 2*kernelRadius + 1;  // Required to be odd.
-    const Size kernelSize(kernelRadius, kernelRadius);
+    const Size kernelSize(kernelDiameter, kernelDiameter);
 
     Mat blurredImage;
     switch (blurType)
@@ -42,25 +42,16 @@ Mat CreateBlurredImage(
 cv::Mat CreateEdgeImage(
     const cv::Mat& image)
 {
-    // Define kernel.
-    const int kernelRadius = 1;
-    const int kernelDiameter = 2 * kernelRadius + 1;  // Required to be odd.
-    Mat kernelX(kernelDiameter, kernelDiameter, CV_32F);
-    Mat kernelY(kernelDiameter, kernelDiameter, CV_32F);
+    // Blur image to reduce noise.
+    const int kernelRadius = 5;    
+    const Mat blurredImage = CreateBlurredImage(image, kernelRadius, ImageBlurType::Median);
+    //const Mat blurredImage = CreateBlurredImage(image, kernelRadius, ImageBlurType::Bilateral);
 
-    // Populate kernel.
-    const int nthDerivative = 1;
-    getDerivKernels(kernelX, kernelY, nthDerivative, nthDerivative, kernelDiameter);
-            
-    // Convolve.
-    Point anchor(-1, -1);
-    double delta = 0;
     int depth = -1; 
-    Mat gradientX, gradientY;
-    filter2D(image, gradientX, depth, kernelX, anchor, delta, BORDER_DEFAULT);
-    filter2D(image, gradientY, depth, kernelY, anchor, delta, BORDER_DEFAULT);
+    Mat imageLaplacian;
+    cv::Laplacian(blurredImage, imageLaplacian, depth);
 
-    return gradientX;
+    return imageLaplacian;
 }
 
 /////////////////////////////////////////////////
