@@ -55,7 +55,8 @@ cv::Mat CreateEdgeImage(
 }
 
 /////////////////////////////////////////////////
-Mat CreateHistogramOfImage(const Mat& image)
+Mat CreateHistogramOfImage(
+    const Mat& image)
 {
     // Adapted from https://docs.opencv.org/2.4/doc/tutorials/imgproc/histograms/histogram_calculation/histogram_calculation.html.
     std::vector<Mat> colorChannels;
@@ -112,3 +113,19 @@ Mat CreateHistogramOfImage(const Mat& image)
 
     return histImage;
 }
+
+/////////////////////////////////////////////////
+cv::Mat SharpenEdges(
+    const cv::Mat& image)
+{
+    const Mat edgeImage = CreateEdgeImage(image);
+    const Mat smoothedEdgeImage = CreateBlurredImage(
+        edgeImage,
+        3, // kernelRadius
+        ImageBlurType::Median);
+
+    const int scale = 10;   // TODO: Make choice of scale more dynamic.
+    const Mat sharpenedImage = image - scale * smoothedEdgeImage;
+    return sharpenedImage;
+}
+

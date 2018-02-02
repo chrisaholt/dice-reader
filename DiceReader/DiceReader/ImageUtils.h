@@ -18,4 +18,8 @@ cv::Mat CreateBlurredImage(
 cv::Mat CreateEdgeImage(
     const cv::Mat& image);
 
-cv::Mat CreateHistogramOfImage(const cv::Mat& image);
+cv::Mat CreateHistogramOfImage(
+    const cv::Mat& image);
+
+cv::Mat SharpenEdges(
+    const cv::Mat& image);
