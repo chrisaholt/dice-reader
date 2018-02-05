@@ -1,7 +1,9 @@
 #pragma once
 
+#include <functional>
+
 #include <opencv2/opencv.hpp>
 
 void ApplyPerFrameManipulationToWebcamStream(
-    // Function ImageManipulationTechnique
+    std::function<cv::Mat(const cv::Mat&)> ImageManipulation
 );

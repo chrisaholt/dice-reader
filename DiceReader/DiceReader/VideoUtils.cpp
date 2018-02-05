@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 void ApplyPerFrameManipulationToWebcamStream(
-    // Function ImageManipulationTechnique
+    std::function<cv::Mat(const cv::Mat&)> ImageManipulation
 )
 {
     cv::VideoCapture webcam(0);
@@ -11,21 +11,11 @@ void ApplyPerFrameManipulationToWebcamStream(
         exit(1);
     }
 
-    // Create window controls.
-    std::string controlWindowName = "Control";
-    cv::namedWindow(controlWindowName, CV_WINDOW_AUTOSIZE); //create a window called "Control"
-
-    int kernelRadiusLow = 1;
-    int kernelRadiusHigh = 20;
-
-    //Create trackbars in control window
-    cvCreateTrackbar("Kernel Radius", controlWindowName.c_str(), &kernelRadiusLow, kernelRadiusHigh);
-
     while (true)
     {
         // Read image from webcam.
         cv::Mat imgOriginal;
-        bool couldReadFrame = webcam.read(imgOriginal);
+        const bool couldReadFrame = webcam.read(imgOriginal);
 
         if (!couldReadFrame)
         {
@@ -33,16 +23,17 @@ void ApplyPerFrameManipulationToWebcamStream(
             break;
         }
 
-        // Blur image.
-        const int kernelRadius = kernelRadiusLow;
-        const cv::Mat blurredImage = CreateBlurredImage(
-            imgOriginal,
-            kernelRadius,
-            ImageBlurType::Bilateral);
+        const bool shouldUseGrayscale = true;
+        if (shouldUseGrayscale)
+        {
+            cv::cvtColor(imgOriginal, imgOriginal, CV_BGR2GRAY);
+        }
+
+        const cv::Mat updatedImage = ImageManipulation(imgOriginal);
 
         // Show images.
         cv::imshow("Original", imgOriginal);
-        cv::imshow("Updated", blurredImage);
+        cv::imshow("Updated", updatedImage);
 
         if (cv::waitKey(30) == 27) // Wait for ESC key press for 30ms.
         {
