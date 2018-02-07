@@ -4,7 +4,8 @@ void ApplyPerFrameManipulationToWebcamStream(
     std::function<cv::Mat(const cv::Mat&)> ImageManipulation
 )
 {
-    cv::VideoCapture webcam(0);
+    const int cameraIndex = 1; // 0 = front camera; 1 = back camera
+    cv::VideoCapture webcam(cameraIndex);
     if (!webcam.isOpened())
     {
         std::cout << "Cannot open webcam." << std::endl;
