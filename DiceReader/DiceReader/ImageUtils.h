@@ -21,5 +21,12 @@ cv::Mat CreateEdgeImage(
 cv::Mat CreateHistogramOfImage(
     const cv::Mat& image);
 
+// Example PixelMask is intensity-based thresholding (less than or greater than).
+template <typename PixelType>
+cv::Mat MaskImage(
+    const cv::Mat& image,
+    std::function<bool(const PixelType&)> PixelMask,
+    const PixelType& maskedValue);
+
 cv::Mat SharpenEdges(
     const cv::Mat& image);

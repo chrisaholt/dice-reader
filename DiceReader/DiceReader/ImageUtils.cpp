@@ -115,6 +115,24 @@ Mat CreateHistogramOfImage(
 }
 
 /////////////////////////////////////////////////
+template <typename PixelType>
+cv::Mat MaskImage(
+    const cv::Mat& image,
+    std::function<bool(const PixelType&)> PixelMask,
+    const PixelType& maskedValue)
+{
+    Mat masked = image.clone();
+    masked.forEach<PixelType>([&PixelMask, &maskedValue](PixelType &pixel, const int * position) {
+        if (!PixelMask(pixel))
+        {
+            pixel = maskedValue;
+        }
+    });
+
+    return masked;
+}
+
+/////////////////////////////////////////////////
 cv::Mat SharpenEdges(
     const cv::Mat& image)
 {
@@ -129,3 +147,9 @@ cv::Mat SharpenEdges(
     return sharpenedImage;
 }
 
+/////////////////////////////////////////////////
+// Template declarations
+template cv::Mat MaskImage<cv::Point3_<uint8_t>>(
+    const cv::Mat& image,
+    std::function<bool(const cv::Point3_<uint8_t>&)> PixelMask,
+    const cv::Point3_<uint8_t>& maskedValue);
