@@ -24,7 +24,7 @@ void ApplyPerFrameManipulationToWebcamStream(
             break;
         }
 
-        const bool shouldUseGrayscale = true;
+        const bool shouldUseGrayscale = false;
         if (shouldUseGrayscale)
         {
             cv::cvtColor(imgOriginal, imgOriginal, CV_BGR2GRAY);
