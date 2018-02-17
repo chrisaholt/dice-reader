@@ -2,4 +2,11 @@
 
 #include <opencv2/opencv.hpp>
 
-void ShowRGBColorSpace();
+enum class ColorSpace
+{
+    Unknown,
+    BGR,
+    HSV
+};
+
+void DisplayColorSpace(const ColorSpace colorSpace);

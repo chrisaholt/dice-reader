@@ -28,7 +28,7 @@ static void CallbackTrackbar(int pos, void* data)
 }
 
 /////////////////////////////////////////////////
-void ShowRGBColorSpace()
+void DisplayColorSpace(const ColorSpace colorSpace)
 {
     // Create new image.
     const int numRows = 600;
@@ -40,29 +40,56 @@ void ShowRGBColorSpace()
     cv::namedWindow(controlWindowName, CV_WINDOW_AUTOSIZE); //create a window called "Control"
 
     //Create trackbars in control window
-    int bLow = 0;
-    int bHigh = 255;
-    int gLow = 0;
-    int gHigh = 255;
-    int rLow = 0;
-    int rHigh = 255;
+    int low[3] = { 0, 0, 0 };
+    int high[3] = { 255, 255, 255 };
 
-    TrackbarCallbackData bData(0, image);
-    TrackbarCallbackData gData(1, image);
-    TrackbarCallbackData rData(2, image);
+    TrackbarCallbackData data0(0, image);
+    TrackbarCallbackData data1(1, image);
+    TrackbarCallbackData data2(2, image);
 
-    cv::createTrackbar("Blue", controlWindowName.c_str(), &bLow, bHigh, CallbackTrackbar, &bData);
-    cv::createTrackbar("Green", controlWindowName.c_str(), &gLow, gHigh, CallbackTrackbar, &gData);
-    cv::createTrackbar("Red",   controlWindowName.c_str(), &rLow, rHigh, CallbackTrackbar, &rData);
+    std::string colorChannelNames[3];
+    switch (colorSpace)
+    {
+    case ColorSpace::BGR:
+        colorChannelNames[0] = "Blue";
+        colorChannelNames[1] = "Green";
+        colorChannelNames[2] = "Red";
+        break;
+    case ColorSpace::HSV:
+        colorChannelNames[0] = "Hue";
+        colorChannelNames[1] = "Saturation";
+        colorChannelNames[2] = "Value";
+        break;
+    default:
+        std::cerr << "Unknown color space." << std::endl;
+        exit(1);
+    }
+
+    cv::createTrackbar(colorChannelNames[0], controlWindowName.c_str(), &low[0], high[0], CallbackTrackbar, &data0);
+    cv::createTrackbar(colorChannelNames[1], controlWindowName.c_str(), &low[1], high[1], CallbackTrackbar, &data1);
+    cv::createTrackbar(colorChannelNames[2], controlWindowName.c_str(), &low[2], high[2], CallbackTrackbar, &data2);
 
     // Name windows.
     cv::String windowName = "Image";
     namedWindow(windowName);
 
     // Show images.
+    cv::Mat bgrImage;
     while (true)
     {
-        imshow(windowName, image);
+        switch (colorSpace)
+        {
+        case ColorSpace::BGR:
+            bgrImage = image;
+            break;
+        case ColorSpace::HSV:
+            cv::cvtColor(image, bgrImage, CV_HSV2BGR);
+            break;
+        default:
+            std::cerr << "Unknown color space." << std::endl;
+            exit(1);
+        }
+        imshow(windowName, bgrImage);
 
         if (cv::waitKey(30) != -1) // Wait 30 msec for any keystroke in the window
         {
