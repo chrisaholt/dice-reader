@@ -121,7 +121,17 @@ cv::Mat MaskImage(
     std::function<bool(const PixelType&)> PixelMask,
     const PixelType& maskedValue)
 {
-    Mat masked = image.clone();
+    Mat masked;
+    const bool shouldUseHSVColorSpace = true;
+    if (shouldUseHSVColorSpace)
+    {
+        cv::cvtColor(image, masked, CV_BGR2HSV);
+    }
+    else
+    {
+        masked = image.clone();
+    }
+
     masked.forEach<PixelType>([&PixelMask, &maskedValue](PixelType &pixel, const int * position) {
         if (!PixelMask(pixel))
         {
@@ -129,6 +139,10 @@ cv::Mat MaskImage(
         }
     });
 
+    if (shouldUseHSVColorSpace)
+    {
+        cv::cvtColor(masked, masked, CV_HSV2BGR);
+    }
     return masked;
 }
 
