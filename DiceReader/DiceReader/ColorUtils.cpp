@@ -28,6 +28,66 @@ static void CallbackTrackbar(int pos, void* data)
 }
 
 /////////////////////////////////////////////////
+bool DetectBlueInHsv(const cv::Point3_<uint8_t>& pixel)
+{
+    const uint8_t hueThresh[2] = { 90, 130 }; // Blue is between these values.
+    const uint8_t saturationThresh[2] = { 100, 255 }; // 100, 255
+    const uint8_t valueThresh[2] = { 100, 255 };  // 150, 255
+
+    if (hueThresh[0] <= pixel.x && pixel.x <= hueThresh[1] &&
+        saturationThresh[0] <= pixel.y && pixel.y <= saturationThresh[1] &&
+        valueThresh[0] <= pixel.z && pixel.z <= valueThresh[1])
+    {
+        return true;
+    }
+
+    return false;
+}
+
+/////////////////////////////////////////////////
+bool DetectRedInHsv(const cv::Point3_<uint8_t>& pixel)
+{
+    const uint8_t hueThresh1[2] = { 0, 15 }; // Red is between these values.
+    const uint8_t hueThresh2[2] = { 160, 179 }; // Red is between these values.
+    const uint8_t saturationThresh[2] = { 100, 255 }; // 100, 255
+    const uint8_t valueThresh[2] = { 100, 255 };  // 150, 255
+
+    if (hueThresh1[0] <= pixel.x && pixel.x <= hueThresh1[1] &&
+        saturationThresh[0] <= pixel.y && pixel.y <= saturationThresh[1] &&
+        valueThresh[0] <= pixel.z && pixel.z <= valueThresh[1])
+    {
+        return true;
+    }
+
+    if (hueThresh2[0] <= pixel.x && pixel.x <= hueThresh2[1] &&
+        saturationThresh[0] <= pixel.y && pixel.y <= saturationThresh[1] &&
+        valueThresh[0] <= pixel.z && pixel.z <= valueThresh[1])
+    {
+        return true;
+    }
+
+    return false;
+}
+
+/////////////////////////////////////////////////
+bool DetectWhiteInHsv(const cv::Point3_<uint8_t>& pixel)
+{
+    // Not very accurate white thresholds.
+    const uint8_t hueThresh[2] = { 0, 255 };
+    const uint8_t saturationThresh[2] = { 0, 50 };
+    const uint8_t valueThresh[2] = { 200, 255 };
+
+    if (hueThresh[0] <= pixel.x && pixel.x <= hueThresh[1] &&
+        saturationThresh[0] <= pixel.y && pixel.y <= saturationThresh[1] &&
+        valueThresh[0] <= pixel.z && pixel.z <= valueThresh[1])
+    {
+        return true;
+    }
+
+    return false;
+}
+
+/////////////////////////////////////////////////
 void DisplayColorSpace(const ColorSpace colorSpace)
 {
     // Create new image.
