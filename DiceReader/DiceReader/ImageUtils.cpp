@@ -115,6 +115,46 @@ Mat CreateHistogramOfImage(
 }
 
 /////////////////////////////////////////////////
+cv::Mat DrawCirclesOnImage(
+    const cv::Mat& image)
+{
+    cv::Mat imageWithDrawnCircles = image.clone();
+
+    cv::Mat grayscaleImage;
+    cvtColor(image, grayscaleImage, CV_BGR2GRAY);
+    std::vector<cv::Vec3f> circles;
+    const double minDistBetweenCircleCenters = 25;
+    const int minRadius = 0;
+    const int maxRadius = 30;
+    cv::HoughCircles(
+        grayscaleImage,
+        circles, 
+        CV_HOUGH_GRADIENT,
+        1, 
+        minDistBetweenCircleCenters, 
+        100, 
+        15, 
+        minRadius, 
+        maxRadius);
+
+    const cv::Scalar circleColor(0, 255, 0);
+    const int circleLineWidth = 1;
+
+    // Loop over all detected circles and outline them on the original image
+    for (size_t iCircle = 0; iCircle < circles.size(); ++iCircle)
+    {
+        cv::Point center(
+            static_cast<int>(std::round(circles[iCircle][0])),
+            static_cast<int>(std::round(circles[iCircle][1])));
+        const int radius =
+            static_cast<int>(std::round(circles[iCircle][2]));
+        cv::circle(imageWithDrawnCircles, center, radius, circleColor, circleLineWidth);
+    }
+
+    return imageWithDrawnCircles;
+}
+
+/////////////////////////////////////////////////
 template <typename PixelType>
 cv::Mat MaskImage(
     const cv::Mat& image,
