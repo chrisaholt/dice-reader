@@ -6,7 +6,8 @@ enum class ColorSpace
 {
     Unknown,
     BGR,
-    HSV
+    HSV,
+    YUV
 };
 
 void DisplayColorSpace(const ColorSpace colorSpace);

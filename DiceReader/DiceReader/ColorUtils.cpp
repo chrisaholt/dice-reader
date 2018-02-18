@@ -48,17 +48,26 @@ void DisplayColorSpace(const ColorSpace colorSpace)
     TrackbarCallbackData data2(2, image);
 
     std::string colorChannelNames[3];
+    cv::String windowName;
     switch (colorSpace)
     {
     case ColorSpace::BGR:
         colorChannelNames[0] = "Blue";
         colorChannelNames[1] = "Green";
         colorChannelNames[2] = "Red";
+        windowName = "BGR";
         break;
     case ColorSpace::HSV:
         colorChannelNames[0] = "Hue";
         colorChannelNames[1] = "Saturation";
         colorChannelNames[2] = "Value";
+        windowName = "HSV";
+        break;
+    case ColorSpace::YUV:
+        colorChannelNames[0] = "Luma";
+        colorChannelNames[1] = "ChromaB";
+        colorChannelNames[2] = "ChromaR";
+        windowName = "YUV";
         break;
     default:
         std::cerr << "Unknown color space." << std::endl;
@@ -70,7 +79,6 @@ void DisplayColorSpace(const ColorSpace colorSpace)
     cv::createTrackbar(colorChannelNames[2], controlWindowName.c_str(), &low[2], high[2], CallbackTrackbar, &data2);
 
     // Name windows.
-    cv::String windowName = "Image";
     namedWindow(windowName);
 
     // Show images.
@@ -84,6 +92,9 @@ void DisplayColorSpace(const ColorSpace colorSpace)
             break;
         case ColorSpace::HSV:
             cv::cvtColor(image, bgrImage, CV_HSV2BGR);
+            break;
+        case ColorSpace::YUV:
+            cv::cvtColor(image, bgrImage, CV_YUV2BGR);
             break;
         default:
             std::cerr << "Unknown color space." << std::endl;
