@@ -47,11 +47,20 @@ cv::Mat CreateEdgeImage(
     const Mat blurredImage = CreateBlurredImage(image, kernelRadius, ImageBlurType::Median);
     //const Mat blurredImage = CreateBlurredImage(image, kernelRadius, ImageBlurType::Bilateral);
 
-    int depth = -1; 
-    Mat imageLaplacian;
-    cv::Laplacian(blurredImage, imageLaplacian, depth);
+    // Alternative 1.
+    //int depth = -1; 
+    //Mat imageLaplacian;
+    //cv::Laplacian(blurredImage, imageLaplacian, depth);
+    //return imageLaplacian;
 
-    return imageLaplacian;
+    // Alternative 2.
+    const double thresh1 = 50;
+    const double thresh2 = 3 * thresh1;
+    const int cannyKernelSize = 3;
+    const bool shouldUseL2Gradient = true;
+    cv::Mat edgeImage;
+    cv::Canny(blurredImage, edgeImage, thresh1, thresh2, cannyKernelSize, shouldUseL2Gradient);
+    return edgeImage;
 }
 
 /////////////////////////////////////////////////
