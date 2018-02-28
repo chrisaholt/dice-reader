@@ -141,7 +141,7 @@ cv::Mat DrawCirclesOnImage(
         CV_HOUGH_GRADIENT,
         1, 
         minDistBetweenCircleCenters, 
-        100, 
+        75, 
         15, 
         minRadius, 
         maxRadius);
