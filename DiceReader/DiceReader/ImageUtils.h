@@ -31,5 +31,12 @@ cv::Mat MaskImage(
     std::function<bool(const PixelType&)> PixelMask,
     const PixelType& maskedValue);
 
+void ReadAndDisplayImage(
+    const std::string& imageFilename);
+
+void ReadAndDisplayImageAndManipulation(
+    const std::string& imageFilename,
+    std::function<cv::Mat(const cv::Mat&)> ImageManipulation);
+
 cv::Mat SharpenEdges(
     const cv::Mat& image);

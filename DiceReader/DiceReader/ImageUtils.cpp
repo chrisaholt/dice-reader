@@ -196,6 +196,63 @@ cv::Mat MaskImage(
 }
 
 /////////////////////////////////////////////////
+void ReadAndDisplayImage(const std::string& imageFilename)
+{
+    // Read the image file
+    const cv::Mat image = imread(imageFilename, CV_LOAD_IMAGE_COLOR);
+
+    if (image.empty()) // Check for failure
+    {
+        std::cout << "Could not open or find the image." << std::endl;
+        exit(1);
+    }
+
+    // Name windows.
+    String windowName = "Image";
+
+    // Create windows.
+    namedWindow(windowName);
+
+    // Show images.
+    imshow(windowName, image);
+
+    waitKey(0); // Wait for any keystroke in the window
+    destroyAllWindows();
+}
+
+/////////////////////////////////////////////////
+void ReadAndDisplayImageAndManipulation(
+    const std::string& imageFilename,
+    std::function<cv::Mat(const cv::Mat&)> ImageManipulation)
+{
+    // Read the image file
+    const cv::Mat image = imread(imageFilename, CV_LOAD_IMAGE_COLOR);
+
+    if (image.empty()) // Check for failure
+    {
+        std::cout << "Could not open or find the image." << std::endl;
+        exit(1);
+    }
+
+    const cv::Mat manipulatedImage = ImageManipulation(image);
+
+    // Name windows.
+    String windowImageName = "Image";
+    String windowManipulationName = "Manipulation";
+
+    // Create windows.
+    namedWindow(windowImageName);
+    namedWindow(windowManipulationName);
+
+    // Show images.
+    imshow(windowImageName, image);
+    imshow(windowManipulationName, manipulatedImage);
+
+    waitKey(0); // Wait for any keystroke in the window
+    destroyAllWindows();
+}
+
+/////////////////////////////////////////////////
 cv::Mat SharpenEdges(
     const cv::Mat& image)
 {
